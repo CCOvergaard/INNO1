@@ -1,17 +1,17 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
 
-export default function HomeScreen({ navigation }) {  // Navigation objektet gives af Navigatoren
+export default function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Welcome to Home Screen!</Text>
+      <Text>Welcome to Tutormatch!</Text>
       <Button
-        title="Go to View One"
-        onPress={() => navigation.navigate('ViewOne')}  // Navigerer til ViewOne
+        title="Sign Up as Tutor"
+        onPress={() => navigation.navigate('TutorSignUp')}  // Navigerer til Tutor Sign-Up
       />
       <Button
-        title="Go to View Two"
-        onPress={() => navigation.navigate('ViewTwo')}  // Navigerer til ViewTwo
+        title="Find a Tutor"
+        onPress={() => navigation.navigate('StudentSearch')}  // Navigerer til Student Search
       />
     </View>
   );
