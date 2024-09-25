@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import { db } from '../firebase';  // Hent Firestore
+import { ref, set, push } from 'firebase/database'; // Importér Realtime Database-modulerne
+import { db } from '../firebase';  // Importér Realtime Database fra din firebase.js
 
 export default function TutorSignUp() {
   const [name, setName] = useState('');
@@ -9,19 +10,22 @@ export default function TutorSignUp() {
   const [rate, setRate] = useState('');
 
   const handleSignUp = () => {
-    // Gemmer tutor-data i Firestore
-    db.collection('tutors').add({
+    // Opretter reference til tutorer i databasen
+    const tutorRef = ref(db, 'tutors/');
+    const newTutorRef = push(tutorRef);
+
+    set(newTutorRef, {
       name: name,
       email: email,
       subjects: subjects,
       rate: rate,
     })
-    .then(() => {
-      alert('Tutor signed up successfully!');
-    })
-    .catch((error) => {
-      alert('Error adding tutor: ' + error.message);
-    });
+      .then(() => {
+        alert('Tutor signed up successfully!');
+      })
+      .catch((error) => {
+        alert('Error adding tutor: ' + error.message);
+      });
   };
 
   return (

@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
-import { db } from '../firebase';  // Hent Firestore
+import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database'; // Realtime Database-moduler
+import { db } from '../firebase';  // Importér Realtime Database fra firebase.js
 
 export default function StudentSearch() {
   const [exam, setExam] = useState('');
   const [tutors, setTutors] = useState([]);
 
   const handleSearch = () => {
-    // Søgning efter tutorer baseret på eksamen
-    db.collection('tutors')
-      .where('subjects', '==', exam)
-      .get()
-      .then((querySnapshot) => {
-        const results = [];
-        querySnapshot.forEach((doc) => {
-          results.push(doc.data());
-        });
-        setTutors(results);
-      })
-      .catch((error) => {
-        alert('Error getting tutors: ' + error.message);
+    // Opret en søgeforespørgsel baseret på eksamen
+    const examQuery = query(ref(db, 'tutors'), orderByChild('subjects'), equalTo(exam));
+
+    onValue(examQuery, (snapshot) => {
+      const results = [];
+      snapshot.forEach((childSnapshot) => {
+        results.push(childSnapshot.val());
       });
+      setTutors(results);
+    }, {
+      onlyOnce: true
+    });
   };
 
   return (
