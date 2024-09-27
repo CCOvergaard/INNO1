@@ -35,7 +35,8 @@ export default function StudentSearch() {
         value={exam} // Værdien af inputfeltet
         onChangeText={setExam} // Funktionen, der opdaterer state med inputværdien fra brugeren
       />
-      <Button title="Search" onPress={handleSearch} /> {/* Søge-knap */}
+      <Button title="Search" onPress={handleSearch} /> 
+      {/* Søge-knap */}
       {tutors.length > 0 ? ( // Ternary operator, der viser tutorer, hvis der er nogen på det givet fag der er indtastet, ellers vises en besked
         tutors.map((tutor, index) => (
           <View key={index} style={styles.tutorCard}>

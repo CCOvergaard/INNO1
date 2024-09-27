@@ -60,7 +60,8 @@ export default function TutorSignUp() {
         value={rate}
         onChangeText={setRate}
       />
-      <Button title="Sign Up" onPress={handleSignUp} /> {/* Tilmeld-knap */}
+      <Button title="Sign Up" onPress={handleSignUp} /> 
+      {/* Tilmeld-knap */}
     </View>
   );
 }
