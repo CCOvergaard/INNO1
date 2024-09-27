@@ -1,9 +1,9 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native"; // Importer NavigationContainer for at håndtere navigationen
-import { createStackNavigator } from "@react-navigation/stack"; // Importer createStackNavigator til at lave en staknavigator
-import HomeScreen from "./screens/HomeScreen"; // Importer HomeScreen komponenten
-import TutorSignUp from "./screens/TutorSignup"; // Importer TutorSignUp komponenten
-import StudentSearch from "./screens/StudentSearch"; // Importer StudentSearch komponenten
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./screens/HomeScreen";
+import TutorSignUp from "./screens/TutorSignup";
+import StudentSearch from "./screens/StudentSearch";
 
 // Opret en staknavigator
 const Stack = createStackNavigator();

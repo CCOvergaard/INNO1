@@ -1,56 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
-import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database'; // Firebase Realtime Database-moduler
-import { db } from '../firebase';  // Importér Realtime Database-instansen fra firebase.js
 
-// Hovedkomponenten til studenter-søgning
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database'; // Firebase funktioner til Realtime Database
+import { db } from '../firebase'; // Firebase konfiguration
+
+// StudentSearch-komponent
 export default function StudentSearch() {
-  // State til at gemme det indtastede eksamensnavn og søge resultaterne af tutorer
-  const [exam, setExam] = useState('');  // State til eksamen (det brugeren indtaster)
-  const [tutors, setTutors] = useState([]);  // State til at holde resultatet af tutorer fundet i databasen
+  const [exam, setExam] = useState(''); // State-variabel til at gemme den eksamen, der søges på
+  const [tutors, setTutors] = useState([]); // State-variabel til at gemme de fundne tutorer
 
-  // Funktion der udføres, når brugeren trykker på 'Search'-knappen
+  // Håndterer søgningen efter tutorer baseret på eksamen
   const handleSearch = () => {
-    // Opretter en forespørgsel (query) til databasen der sorterer efter 'subjects' og finder de tutorer,
-    // som har 'subjects' der matcher det eksamensnavn brugeren har indtastet
-    const examQuery = query(ref(db, 'tutors'), orderByChild('subjects'), equalTo(exam));
+    const examQuery = query(ref(db, 'tutors'), orderByChild('subjects'), equalTo(exam)); // Opretter forespørgsel i databasen på baggrund af den "sti" som ref funktion der blev oprettede i "tutorSignup.js" 
 
-    // Henter data fra Realtime Database baseret på forespørgslen
-    onValue(examQuery, (snapshot) => { 
+    // Udfører forespørgslen og opdaterer state med resultaterne
+    onValue(examQuery, (tutor) => {
       const results = [];
-      // Gennemgår alle de fundne resultater (børn af 'tutors' noden) og tilføjer dem til results array
-      snapshot.forEach((childSnapshot) => {
-        results.push(childSnapshot.val());
+      tutor.forEach((tut) => {
+        results.push(tut.val());
       });
-      // Opdaterer state med de fundne tutorer
       setTutors(results);
     }, {
-      // Angiver, at forespørgslen kun skal udføres én gang
-      onlyOnce: true
+      onlyOnce: true, // Søger kun én gang
     });
   };
 
+  // Returnerer komponenten
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text>Find a Tutor</Text>
-      {/* Inputfelt for brugeren til at indtaste eksamensnavn */}
-      <TextInput placeholder="Enter exam" value={exam} onChangeText={setExam} />
-      {/* Knappen der udfører søgningen */}
-      <Button title="Search" onPress={handleSearch} />
-      
-      {/* Viser listen af tutorer, hvis der er nogen, ellers viser en besked om at ingen tutorer blev fundet */}
-      {tutors.length > 0 ? (
-        // Mapper igennem alle de fundne tutorer og viser dem på skærmen
+    <View style={styles.container}>
+      <Text style={styles.header}>Find a Tutor</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter exam"
+        value={exam} // Værdien af inputfeltet
+        onChangeText={setExam} // Funktionen, der opdaterer state med inputværdien fra brugeren
+      />
+      <Button title="Search" onPress={handleSearch} /> {/* Søge-knap */}
+      {tutors.length > 0 ? ( // Ternary operator, der viser tutorer, hvis der er nogen på det givet fag der er indtastet, ellers vises en besked
         tutors.map((tutor, index) => (
-          <View key={index}>
-            <Text>{tutor.name} - {tutor.subjects}</Text>
-            <Text>Rate: {tutor.rate}</Text>
+          <View key={index} style={styles.tutorCard}>
+            <Text style={styles.tutorText}>{tutor.name} - {tutor.subjects}</Text>
+            <Text style={styles.tutorText}>Rate: {tutor.rate}</Text>
           </View>
         ))
       ) : (
-        // Hvis der ikke er nogen tutorer fundet vises denne tekst
-        <Text>No tutors found</Text>
+        <Text style={styles.noResults}>No tutors found</Text>
       )}
     </View>
   );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f0f8ff',
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  tutorCard: {
+    padding: 15,
+    backgroundColor: '#fff',
+    marginVertical: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  tutorText: {
+    fontSize: 16,
+  },
+  noResults: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#777',
+  },
+});
