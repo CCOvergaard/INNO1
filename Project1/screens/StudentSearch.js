@@ -40,8 +40,9 @@ export default function StudentSearch() {
       {tutors.length > 0 ? ( // Ternary operator, der viser tutorer, hvis der er nogen på det givet fag der er indtastet, ellers vises en besked
         tutors.map((tutor, index) => (
           <View key={index} style={styles.tutorCard}>
-            <Text style={styles.tutorText}>{tutor.name} - {tutor.subjects}</Text>
-            <Text style={styles.tutorText}>Rate: {tutor.rate}</Text>
+            <Text style={styles.tutorText}>{tutor.name} </Text>
+            <Text style={styles.tutorText}>{tutor.subjects}</Text>
+            <Text style={styles.tutorText}>Rate: {tutor.rate}kr</Text>
           </View>
         ))
       ) : (
