@@ -42,7 +42,7 @@ export default function StudentSearch() {
           <View key={index} style={styles.tutorCard}>
             <Text style={styles.tutorText}>{tutor.name} </Text>
             <Text style={styles.tutorText}>{tutor.subjects}</Text>
-            <Text style={styles.tutorText}>Rate: {tutor.rate}kr</Text>
+            <Text style={styles.tutorText}>Rate: {tutor.rate}</Text>
           </View>
         ))
       ) : (
